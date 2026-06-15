@@ -1,0 +1,31 @@
+plugins {
+	id "fabric-loom" version "1.15-SNAPSHOT"
+}
+
+def mcVersion = "1.21.5"
+def loaderVer = "0.16.5"
+def javaVer = 21
+
+dependencies {
+	minecraft "com.mojang:minecraft:${mcVersion}"
+	mappings loom.officialMojangMappings()
+	implementation "net.fabricmc:fabric-loader:${loaderVer}"
+	implementation "net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5"
+}
+
+loom {
+	mods {
+		create("novisualdistractions") {
+			sourceSet(sourceSets.main)
+		}
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.release = javaVer
+}
+
+java {
+	sourceCompatibility = JavaVersion.toVersion(javaVer)
+	targetCompatibility = JavaVersion.toVersion(javaVer)
+}

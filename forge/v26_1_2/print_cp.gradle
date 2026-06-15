@@ -1,0 +1,7 @@
+tasks.register("printCompileClasspath") {
+    doLast {
+        sourceSets.main.compileClasspath.each { file ->
+            println file
+        }
+    }
+}

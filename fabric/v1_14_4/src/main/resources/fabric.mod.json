@@ -1,0 +1,19 @@
+{
+	"schemaVersion": 1,
+	"id": "novisualdistractions",
+	"version": "${version}",
+	"name": "No Visual Distractions",
+	"description": "Disables hurt cam, damage sounds, thorns sounds, fire overlay, lava sizzling, speed/slowness FOV, blindness fog effects for a cleaner experience.",
+	"authors": ["rafferty"],
+	"license": "WTFPL",
+	"environment": "client",
+	"entrypoints": {
+		"client": ["com.novisualdistractions.NoVisualDistractions"]
+	},
+	"mixins": ["novisualdistractions.mixins.json"],
+	"depends": {
+		"fabricloader": ">=0.11",
+		"minecraft": "~1.14.4",
+		"java": ">=8"
+	}
+}

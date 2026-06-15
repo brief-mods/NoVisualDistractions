@@ -1,0 +1,97 @@
+apply plugin: "base"
+
+subprojects {
+	if (it.name in ["fabric", "forge"]) return
+
+	version = rootProject.version
+	group = rootProject.group
+
+	base {
+		archivesName = rootProject.archives_base_name
+	}
+
+	def mcVersion = project.name.replace('v', '').replace('_', '.')
+	tasks.withType(AbstractArchiveTask).configureEach {
+		archiveVersion = mcVersion
+	}
+
+	tasks.withType(JavaCompile).configureEach {
+		options.encoding = "UTF-8"
+	}
+
+	repositories {
+		mavenCentral()
+		maven { url = "https://maven.fabricmc.net" }
+		maven { url = "https://libraries.minecraft.net" }
+		maven { url = "https://maven.minecraftforge.net" }
+	}
+
+	if (project.path.startsWith(":fabric:")) {
+		apply plugin: "java"
+		apply plugin: "maven-publish"
+
+		base {
+			archivesName = rootProject.archives_base_name
+		}
+
+		java {
+			withSourcesJar()
+		}
+
+		processResources {
+			inputs.property "version", project.version
+			filesMatching("fabric.mod.json") {
+				expand "version": inputs.properties.version
+			}
+		}
+
+		publishing {
+			publications {
+				mavenJava(MavenPublication) {
+					from components.java
+				}
+			}
+		}
+
+		tasks.withType(AbstractArchiveTask).configureEach {
+			archiveBaseName = rootProject.archives_base_name
+		}
+
+		jar {
+			exclude("net/fabricmc/**")
+			duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+		}
+	}
+}
+
+tasks.register("collectJars") {
+	doLast {
+		def outFabric = file("${project.buildDir}/libs/fabric")
+		def outForge = file("${project.buildDir}/libs/forge")
+		outFabric.mkdirs()
+		outForge.mkdirs()
+		subprojects.findAll { it.name != "fabric" && it.name != "forge" }.each { sp ->
+			def outputDir = sp.path.startsWith(":forge:") ? outForge : outFabric
+			def jarTask = sp.tasks.findByName("remapJar") ?: sp.tasks.findByName("reobfJar") ?: sp.tasks.findByName("jar")
+			if (jarTask != null && jarTask.outputs.files.singleFile.exists()) {
+				copy {
+					from jarTask.outputs.files.singleFile
+					into outputDir
+				}
+			}
+		}
+	}
+}
+
+afterEvaluate {
+	tasks.named("collectJars") {
+		def realProjects = subprojects.findAll {
+			it.name != "fabric" && it.name != "forge" && file("${it.projectDir}/build.gradle").exists()
+		}
+		realProjects.each { dependsOn "${it.path}:assemble" }
+	}
+}
+
+tasks.named("build") {
+	dependsOn collectJars
+}

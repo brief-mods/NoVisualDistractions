@@ -1,0 +1,9 @@
+modLoader = "javafml"
+loaderVersion = "[62,)"
+
+[[mods]]
+modId = "novisualdistractions"
+version = "${version}"
+displayName = "NoVisualDistractions"
+logoFile = "icon.png"
+description = "Removes visual distractions and annoying sounds"

@@ -1,0 +1,19 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "com.novisualdistractions.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"MixinGameRenderer",
+		"MixinLivingEntity",
+		"MixinScreenEffectRenderer",
+		"MixinSoundEngine",
+		"MixinAbstractClientPlayer",
+		"MixinMobEffectFog",
+		"MixinBackgroundRenderer",
+		"MixinFullbright"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

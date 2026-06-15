@@ -1,0 +1,35 @@
+plugins {
+	id "net.fabricmc.fabric-loom" version "1.15-SNAPSHOT"
+}
+
+def mcVersion = "26.1.2"
+def loaderVer = "0.18.6"
+def javaVer = 25
+
+dependencies {
+	minecraft "com.mojang:minecraft:${mcVersion}"
+	implementation "net.fabricmc:fabric-loader:${loaderVer}"
+}
+
+task printConfigs {
+	doLast {
+		configurations.each { println it.name }
+	}
+}
+
+loom {
+	mods {
+		create("novisualdistractions") {
+			sourceSet(sourceSets.main)
+		}
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.release = javaVer
+}
+
+java {
+	sourceCompatibility = JavaVersion.toVersion(javaVer)
+	targetCompatibility = JavaVersion.toVersion(javaVer)
+}

@@ -1,0 +1,15 @@
+build/
+.gradle/
+.gradle-mavenizer/
+*.jar
+*.log
+*.tmp
+.local/
+.env
+.idea/
+*.iml
+.vscode/
+out/
+bin/
+.DS_Store
+Thumbs.db
